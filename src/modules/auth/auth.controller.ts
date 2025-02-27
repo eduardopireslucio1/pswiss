@@ -24,10 +24,7 @@ export class AuthController {
     } catch (error) {
       console.log(error);
 
-      throw new HttpException(
-        'Erro ao registrar usuário',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Error registering user', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -41,7 +38,7 @@ export class AuthController {
 
       return result;
     } catch (error) {
-      throw new HttpException('Credenciais inválidas', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
   }
 }

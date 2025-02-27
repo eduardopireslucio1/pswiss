@@ -5,8 +5,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthController } from './modules/auth/auth.controller';
 import { AuthModule } from './modules/auth/auth.module';
-import { DatabaseModule } from './modules/database/database.module';
-import { JWTModule } from './modules/jwt/jwt.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthService } from './modules/auth/auth.service';
 @Module({
@@ -36,8 +34,6 @@ import { AuthService } from './modules/auth/auth.service';
     }),
     TypeOrmModule.forFeature([User]),
     AuthModule,
-    DatabaseModule,
-    JWTModule,
     UsersModule,
   ],
   controllers: [AuthController],

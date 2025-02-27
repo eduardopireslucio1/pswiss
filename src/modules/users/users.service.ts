@@ -12,16 +12,18 @@ export class UsersService {
   ) {}
 
   async create(name: string, email: string, password: string): Promise<User> {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = this.userRepository.create({
       name,
       email,
-      password: hashedPassword,
+      password,
       created_at: new Date(),
     });
 
     return this.userRepository.save(newUser);
+  }
+
+  async getAll(): Promise<User[]> {
+    return this.userRepository.find();
   }
 
   async findByEmail(email: string): Promise<User | null> {

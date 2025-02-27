@@ -15,9 +15,9 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<{ token: string }> {
-    const salt = bcrypt.genSaltSync(10);
+    const salt = await bcrypt.genSalt(10);
 
-    const hashedPassword = bcrypt.hashSync(password, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await this.usersService.create(name, email, hashedPassword);
 
@@ -32,17 +32,13 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('Email ou senha inválidos');
+      throw new UnauthorizedException('Invalid e-mail or password');
     }
 
-    console.log({ email, password, userPassword: user.password });
-
-    const isMatch = bcrypt.compareSync(password, user.password);
-
-    console.log({ isMatch });
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      throw new UnauthorizedException('Email ou senha inválidos');
+      throw new UnauthorizedException('Invalid e-mail or password');
     }
 
     const payload = { email: user.email, sub: user.id };
