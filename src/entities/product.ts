@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
-export class Client {
+export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -9,7 +9,7 @@ export class Client {
   name: string;
 
   @Column()
-  ref: string;
+  identification: string;
 
   @Column()
   created_at: Date;
@@ -17,8 +17,8 @@ export class Client {
   @Column()
   updated_at: Date;
 
-  constructor(name: string, ref: string) {
+  constructor(name: string, identification: string) {
     this.name = name;
-    this.ref = ref;
+    this.identification = identification;
   }
 }

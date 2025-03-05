@@ -9,22 +9,22 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { ClientService } from './client.service';
+import { OrderService } from './order.service';
 
-@Controller('client')
-export class ClientController {
-  constructor(private clientService: ClientService) {}
+@Controller('order')
+export class OrderController {
+  constructor(private orderService: OrderService) {}
 
   @Post('/')
-  async create(@Body('name') name: string, @Body('ref') ref: string) {
+  async create(@Body('client_id') clientId: number) {
     try {
-      const result = await this.clientService.create(name, ref);
+      const result = await this.orderService.create(clientId);
 
       return result;
     } catch (error) {
       console.log(error);
       throw new HttpException(
-        'Error to create client at ClientController',
+        'Error to create order at OrderController',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -33,30 +33,28 @@ export class ClientController {
   @Get('/')
   async getAll() {
     try {
-      const result = await this.clientService.getAll();
+      const result = await this.orderService.getAll();
 
       return result;
     } catch (error) {
       throw new HttpException(
-        'Error to getAll at ClientController',
+        'Error to getAll at OrderController',
         HttpStatus.UNAUTHORIZED,
       );
     }
   }
 
   @Put('/:id')
-  async update(
-    @Param('id') id: number,
-    @Body('name') name: string,
-    @Body('ref') ref: string,
-  ) {
+  async update(@Param('id') id: number, @Body('client_id') client_id: number) {
     try {
-      const result = await this.clientService.update(id, { name, ref });
+      const result = await this.orderService.update(id, {
+        client_id,
+      });
 
       return result;
     } catch (error) {
       throw new HttpException(
-        'Error to update client at ClientController',
+        'Error to update order at OrderController',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -65,11 +63,11 @@ export class ClientController {
   @Delete('/:id')
   async delete(@Param('id') id: number) {
     try {
-      const result = await this.clientService.delete(id);
+      const result = await this.orderService.delete(id);
       return result;
     } catch (error) {
       throw new HttpException(
-        'Error to delete client at ClientController',
+        'Error to delete order at OrderController',
         HttpStatus.BAD_REQUEST,
       );
     }
