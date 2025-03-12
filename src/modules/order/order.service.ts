@@ -2,19 +2,25 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Client } from 'src/entities/client';
 import { Order } from 'src/entities/order';
+import { OrderProduct } from 'src/entities/order_product';
 import { Repository } from 'typeorm';
+import { ClientService } from '../client/client.service';
+import { OrderProductService } from '../order_products/order_product.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
-    @InjectRepository(Client)
-    private readonly clientRepository: Repository<Client>,
+    private readonly clientService: ClientService,
+    private readonly orderProductService: OrderProductService,
   ) {}
 
-  async create(clientId: number): Promise<Order> {
-    const client = await this.clientRepository.findOneBy({ id: clientId });
+  async create(
+    clientId: number,
+    products: Partial<OrderProduct>[],
+  ): Promise<Order> {
+    const client = await this.clientService.getById(clientId);
 
     if (!client) {
       throw new NotFoundException('Client not found');
@@ -26,8 +32,20 @@ export class OrderService {
       updated_at: new Date(),
     });
 
-    return this.orderRepository.save(newOrder);
+    const savedOrder = await this.orderRepository.save(newOrder);
+
+    const productsWithOrder = products.map((product) => ({
+      ...product,
+      order: savedOrder,
+      created_at: new Date(),
+      updated_at: new Date(),
+    }));
+
+    await this.orderProductService.addProductsInBulk(productsWithOrder);
+
+    return savedOrder;
   }
+
   async getAll() {
     return this.orderRepository.find();
   }

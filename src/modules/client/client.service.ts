@@ -25,6 +25,10 @@ export class ClientService {
     return this.clientRepository.find();
   }
 
+  async getById(clientId: number) {
+    return this.clientRepository.findOneBy({ id: clientId });
+  }
+
   async update(
     id: number,
     updatedData: { name: string; ref: string },

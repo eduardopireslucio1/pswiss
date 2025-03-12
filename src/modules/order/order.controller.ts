@@ -10,15 +10,19 @@ import {
   Delete,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
+import { OrderProduct } from 'src/entities/order_product';
 
 @Controller('order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
   @Post('/')
-  async create(@Body('client_id') clientId: number) {
+  async create(
+    @Body('client_id') clientId: number,
+    @Body('products') products: OrderProduct[],
+  ) {
     try {
-      const result = await this.orderService.create(clientId);
+      const result = await this.orderService.create(clientId, products);
 
       return result;
     } catch (error) {

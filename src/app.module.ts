@@ -18,6 +18,9 @@ import { OrderModule } from './modules/order/order.module';
 import { Order } from './entities/order';
 import { OrderController } from './modules/order/order.controller';
 import { OrderService } from './modules/order/order.service';
+import { OrderProduct } from './entities/order_product';
+import { OrderProductController } from './modules/order_products/order_product.controller';
+import { OrderProductService } from './modules/order_products/order_product.service';
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -39,11 +42,11 @@ import { OrderService } from './modules/order/order.service';
       username: process.env.DB_USERNAME!,
       password: process.env.DB_PASSWORD!,
       database: process.env.DB_NAME!,
-      entities: [User, Client, Product, Order],
+      entities: [User, Client, Product, Order, OrderProduct],
       synchronize: true,
       logging: true,
     }),
-    TypeOrmModule.forFeature([User, Client, Product, Order]),
+    TypeOrmModule.forFeature([User, Client, Product, Order, OrderProduct]),
     AuthModule,
     UsersModule,
     ClientModule,
@@ -54,7 +57,14 @@ import { OrderService } from './modules/order/order.service';
     ClientController,
     ProductController,
     OrderController,
+    OrderProductController,
   ],
-  providers: [AuthService, ClientService, ProductService, OrderService],
+  providers: [
+    AuthService,
+    ClientService,
+    ProductService,
+    OrderService,
+    OrderProductService,
+  ],
 })
 export class AppModule {}
